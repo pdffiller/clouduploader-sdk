@@ -1,0 +1,31 @@
+{
+  "name": "Nickstery/CloudUploader-SDK",
+  "type": "API",
+  "description": "Nickstery",
+    "autoload": {
+        "psr-4": {
+            "HttpReceiver\\": "HttpReceiver/",
+            "Fabric\\": "Fabric/",
+            "Interfaces\\": "Interfaces/",
+            "UploadModels\\": "UploadModels/",
+            "Apibox\\":"vendor/nikitash/boxphpapi/src"
+        }
+    },
+    "repositories": [
+    {
+      "type": "vcs",
+      "url": "http://gitlab.pdffiller.com/nickstery/Box-SDK.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/google/google-api-php-client.git"
+    }
+  ],
+  "minimum-stability": "stable",
+    "require": {
+        "krizalys/onedrive-php-sdk": "1.0.0",
+        "nikitash/boxphpapi": "^1.0",
+        "dropbox/dropbox-sdk": "1.1.*",
+        "google/apiclient": "2.0.*"
+    }
+}
