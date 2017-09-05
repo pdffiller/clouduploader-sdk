@@ -36,11 +36,13 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
             return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
         }
 
+        $extension = self::getExtension($uploadFile);
+
         if (!isset($fileName) || strlen($fileName) == 0 || $fileName == '0') {
             $tmp = explode('/', $uploadFile);
             $fileName = $tmp[sizeof($tmp) - 1];
         }else{
-            $fileName .= '.'.self::getExtension($uploadFile);
+            $fileName .= '.'.$extension;
         }
 
         //Insert a file
@@ -54,7 +56,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         try {
             $createdFile = $service->files->create($file, array(
                 'data' => $data,
-                'mimeType' => 'image/jpeg',
+                'mimeType' => self::getMime($extension),
                 'uploadType' => 'multipart',
                 'fields' => 'id'));
         } catch(\Exception $e) {
