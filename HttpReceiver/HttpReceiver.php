@@ -2,15 +2,17 @@
 
 namespace HttpReceiver;
 
-class HttpReceiver{
+class HttpReceiver
+{
 
-    public static function get($name, $type){
-
-        switch($type){
+    public static function get($name, $type)
+    {
+        $data = array_key_exists($name, $_REQUEST) ? $_REQUEST[$name] : null;
+        switch ($type) {
             case 'int':
-                return intval($_REQUEST[$name]);
+                return intval($data);
             case 'string':
-                return htmlspecialchars(strip_tags($_REQUEST[$name]));
+                return htmlspecialchars(strip_tags($data));
         }
         return '';
     }
