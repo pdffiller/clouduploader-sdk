@@ -1,7 +1,6 @@
 <?php
 namespace UploadModels;
 
-use Dropbox\Exception;
 use Krizalys\Onedrive\Client;
 
 class OneDriveModel implements \Interfaces\UploadServiceInterface {
@@ -44,8 +43,8 @@ class OneDriveModel implements \Interfaces\UploadServiceInterface {
         $client = self::getOneDriveClient($config, $array);
         $parent      = $client->fetchObject($folderId);
         try {
-            $file = $parent->createFile($fileName, file_get_contents($uploadFile));
-        }catch(Exception $e){
+            $parent->createFile($fileName, file_get_contents($uploadFile));
+        }catch(\Exception $e){
             return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
         }
         return array('status' => 'ok');
