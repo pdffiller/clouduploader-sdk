@@ -4,48 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bb6b21e51f204fa37cc9233c1836483d",
-    "content-hash": "4d0c7c929e8730abc06be2014f7a18bd",
+    "content-hash": "394a03dc79487d711cebdb5b126b4a3f",
     "packages": [
-        {
-            "name": "dropbox/dropbox-sdk",
-            "version": "v1.1.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dropbox/dropbox-sdk-php.git",
-                "reference": "0f1a178ca9c0271bca6426dde8f5a2241578deae"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dropbox/dropbox-sdk-php/zipball/0f1a178ca9c0271bca6426dde8f5a2241578deae",
-                "reference": "0f1a178ca9c0271bca6426dde8f5a2241578deae",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">= 5.3"
-            },
-            "require-dev": {
-                "apigen/apigen": "4.1.2",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "2.0.0RC3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Dropbox": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Dropbox SDK for PHP",
-            "keywords": [
-                "dropbox"
-            ],
-            "time": "2016-08-08 23:48:49"
-        },
         {
             "name": "firebase/php-jwt",
             "version": "v3.0.0",
@@ -87,7 +47,7 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2015-07-22 18:31:08"
+            "time": "2015-07-22T18:31:08+00:00"
         },
         {
             "name": "google/apiclient",
@@ -149,7 +109,7 @@
                 "source": "https://github.com/google/google-api-php-client/tree/v2.0.3",
                 "issues": "https://github.com/google/google-api-php-client/issues"
             },
-            "time": "2016-09-14 19:33:35"
+            "time": "2016-09-14T19:33:35+00:00"
         },
         {
             "name": "google/apiclient-services",
@@ -183,7 +143,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2016-09-14 19:12:27"
+            "time": "2016-09-14T19:12:27+00:00"
         },
         {
             "name": "google/auth",
@@ -231,7 +191,7 @@
                 "google",
                 "oauth2"
             ],
-            "time": "2016-08-02 22:00:48"
+            "time": "2016-08-02T22:00:48+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -293,7 +253,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-02-28 22:50:30"
+            "time": "2017-02-28T22:50:30+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -344,7 +304,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20 10:07:11"
+            "time": "2016-12-20T10:07:11+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -409,7 +369,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20 17:10:46"
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
             "name": "krizalys/onedrive-php-sdk",
@@ -450,7 +410,55 @@
                 "php",
                 "sdk"
             ],
-            "time": "2015-11-22 09:58:28"
+            "time": "2015-11-22T09:58:28+00:00"
+        },
+        {
+            "name": "kunalvarma05/dropbox-php-sdk",
+            "version": "v0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kunalvarma05/dropbox-php-sdk.git",
+                "reference": "27036f20b7eeb59d5e559e03d4280851f6eb789b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kunalvarma05/dropbox-php-sdk/zipball/27036f20b7eeb59d5e559e03d4280851f6eb789b",
+                "reference": "27036f20b7eeb59d5e559e03d4280851f6eb789b",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~6.0",
+                "tightenco/collect": "^5.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kunnu\\Dropbox\\": "src/Dropbox"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kunal Varma",
+                    "email": "kunalvarma05@gmail.com"
+                }
+            ],
+            "description": "Dropbox PHP API V2 SDK (Unofficial)",
+            "keywords": [
+                "api",
+                "client",
+                "dropbox",
+                "php",
+                "sdk",
+                "unofficial"
+            ],
+            "time": "2017-06-26T09:37:16+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -528,7 +536,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2017-03-13 07:08:03"
+            "time": "2017-03-13T07:08:03+00:00"
         },
         {
             "name": "pdffiller/boxphpapi",
@@ -568,7 +576,7 @@
                 "source": "https://github.com/pdffiller/Box-SDK/tree/master",
                 "issues": "https://github.com/pdffiller/Box-SDK/issues"
             },
-            "time": "2017-04-12 08:57:53"
+            "time": "2017-04-12T08:57:53+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -660,7 +668,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2016-10-04 00:57:04"
+            "time": "2016-10-04T00:57:04+00:00"
         },
         {
             "name": "psr/cache",
@@ -706,7 +714,7 @@
                 "psr",
                 "psr-6"
             ],
-            "time": "2016-08-06 20:24:11"
+            "time": "2016-08-06T20:24:11+00:00"
         },
         {
             "name": "psr/http-message",
@@ -756,7 +764,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -803,7 +811,54 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10 12:19:37"
+            "time": "2016-10-10T12:19:37+00:00"
+        },
+        {
+            "name": "tightenco/collect",
+            "version": "v5.5.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tightenco/collect.git",
+                "reference": "dae85b18c6a2315645bca3dac37e3e408542efa8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/dae85b18c6a2315645bca3dac37e3e408542efa8",
+                "reference": "dae85b18c6a2315645bca3dac37e3e408542efa8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~1.0",
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Illuminate/Support/helpers.php"
+                ],
+                "psr-4": {
+                    "Illuminate\\": "src/Illuminate"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                }
+            ],
+            "description": "Collect - Illuminate Collections as a separate package.",
+            "keywords": [
+                "collection",
+                "laravel"
+            ],
+            "time": "2017-09-25T17:13:51+00:00"
         }
     ],
     "packages-dev": [],

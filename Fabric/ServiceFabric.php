@@ -1,7 +1,6 @@
 <?php
 
 namespace Fabric;
-use \Dropbox as dbx;
 
 class ServiceFabric{
 
@@ -14,30 +13,23 @@ class ServiceFabric{
 
         if ($code == 'code') {
             switch ($type) {
-                case SELF::DROPBOX:
+                case self::DROPBOX:
                     $data = \HttpReceiver\HttpReceiver::get('userId','int');
                     return \UploadModels\DropBoxModel::auth($data,$config);
-                    break;
-                case SELF::GOOGLEDRIVE:
+                case self::GOOGLEDRIVE:
                     $data = \HttpReceiver\HttpReceiver::get('userId','int');
                     return \UploadModels\GoogleDriveModel::auth($data,$config);
-                    break;
-                case SELF::BOX:
+                case self::BOX:
                     $data = \HttpReceiver\HttpReceiver::get('userId','int');
                     return \UploadModels\BoxModel::auth($data,$config);
-                    break;
-                case SELF::ONEDRIVE:
+                case self::ONEDRIVE:
                     $data = \HttpReceiver\HttpReceiver::get('userId','int');
                     return \UploadModels\OneDriveModel::auth($data,$config);
-                    break;
             }
         }elseif($code == 'access_token'){
             $result = self::getToken($type, $config);
-            $data = array('service' => $type, 'token_data' => $result);
-            return $data;
-
+            return array('service' => $type, 'token_data' => $result);
         }
-
     }
 
 
@@ -50,19 +42,17 @@ class ServiceFabric{
         }
 
         switch($type){
-            case SELF::DROPBOX:
+            case self::DROPBOX:
                 if(!isset($access_token)) {
                     return array('status' => 'error', 'msg' => 'deniedByUser');
                 }
-                $result = array();
                 try {
                     $result = \UploadModels\DropBoxModel::uploadFile($access_token, $uploadFile, $fileName, $config);
-                }catch (dbx\Exception $e){
+                }catch (\Exception $e){
                     $result = array('status' => 'error', 'msg' => 'Cloud Error');
                 }
                 break;
-            case SELF::GOOGLEDRIVE:
-                $result = array();
+            case self::GOOGLEDRIVE:
                 if(!isset($access_token)) {
                     return array('status' => 'error', 'msg' => 'deniedByUser');
                 }
@@ -73,22 +63,20 @@ class ServiceFabric{
                     $result = array('status' => 'error', 'msg' => 'Cloud Error');
                 }
                 break;
-            case SELF::BOX:
+            case self::BOX:
                 if(!isset($access_token)) {
                     return array('status' => 'error', 'msg' => 'deniedByUser');
                 }
-                $result = array();
                 try {
                     $result = \UploadModels\BoxModel::uploadFile($access_token, $uploadFile, $fileName, $config);
                 } catch(\Exception $e){
                     $result = array('status' => 'error', 'msg' => 'Cloud Error');
                 }
                 break;
-            case SELF::ONEDRIVE:
+            case self::ONEDRIVE:
                 if(!isset($access_token)) {
                     return array('status' => 'error', 'msg' => 'deniedByUser');
                 }
-                $result = array();
                 try {
                     $result = \UploadModels\OneDriveModel::uploadFile($access_token, $uploadFile, $fileName, $config);
                 } catch(\Exception $e){
@@ -103,20 +91,19 @@ class ServiceFabric{
 
         $result = '';
         switch($type){
-            case SELF::DROPBOX:
+            case self::DROPBOX:
                 $result = \UploadModels\DropBoxModel::getToken($config);
                 break;
-            case SELF::GOOGLEDRIVE:
+            case self::GOOGLEDRIVE:
                 $result = \UploadModels\GoogleDriveModel::getToken($config);
                 break;
-            case SELF::BOX:
+            case self::BOX:
                 $result = \UploadModels\BoxModel::getToken($config);
                 break;
-            case SELF::ONEDRIVE:
+            case self::ONEDRIVE:
                 $result = \UploadModels\OneDriveModel::getToken($config);
                 break;
         }
         return $result;
     }
-
 }

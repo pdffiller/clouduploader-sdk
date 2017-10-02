@@ -25,7 +25,7 @@
     "require": {
         "krizalys/onedrive-php-sdk": "1.0.0",
         "pdffiller/boxphpapi": "^1.0",
-        "dropbox/dropbox-sdk": "1.1.*",
-        "google/apiclient": "2.0.*"
+        "google/apiclient": "2.0.*",
+        "kunalvarma05/dropbox-php-sdk": "^0.2.1"
     }
 }
