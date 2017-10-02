@@ -7,7 +7,7 @@ class HttpReceiver
 
     public static function get($name, $type)
     {
-        $data = array_key_exists($name, $_REQUEST) ? $_REQUEST[$name] : null;
+        $data = isset($_REQUEST[$name]) ? $_REQUEST[$name] : '';
         switch ($type) {
             case 'int':
                 return intval($data);
