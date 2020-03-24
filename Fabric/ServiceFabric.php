@@ -2,8 +2,8 @@
 
 namespace Fabric;
 
-class ServiceFabric{
-
+class ServiceFabric
+{
     const DROPBOX = 0;
     const GOOGLEDRIVE = 1;
     const BOX = 2;
@@ -30,6 +30,23 @@ class ServiceFabric{
             $result = self::getToken($type, $config);
             return array('service' => $type, 'token_data' => $result);
         }
+    }
+
+    public function getProfile($type, $accessToken, $config)
+    {
+        if (!isset($accessToken)) {
+            return array('status' => 'error', 'msg' => 'deniedByUser');
+        }
+
+        switch ($type) {
+            case self::GOOGLEDRIVE:
+                $result = \UploadModels\GoogleDriveModel::profile($accessToken, $config);
+                break;
+            default:
+                throw new \RuntimeException('Cannot fetch profile.');
+        }
+
+        return $result;
     }
 
 
