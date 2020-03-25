@@ -32,7 +32,7 @@ class ServiceFabric
         }
     }
 
-    public function getProfile($type, $accessToken, $config)
+    public static function getProfile($type, $accessToken, $config)
     {
         if (!isset($accessToken)) {
             return array('status' => 'error', 'msg' => 'deniedByUser');
