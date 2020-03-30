@@ -14,9 +14,9 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
     public static function profile($accessToken, $config)
     {
         $client = self::getGoogleClient($config);
-        $client->setAccessToken((array)$accessToken);
+        $client->setAccessToken($accessToken);
         $service = new \Google_Service_Oauth2($client);
-        return $service->userinfo_v2_me->get();
+        return $service->userinfo->get();
     }
 
     public static function uploadFile($access_token, $uploadFile, $fileName, $config) {
@@ -102,7 +102,11 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         }
 
         $client->setRedirectUri($config['GOOGLEDRIVE_REDIRECT2']);
-        $client->addScope(\Google_Service_Drive::DRIVE);
+        $client->addScope([
+            \Google_Service_Drive::DRIVE_METADATA_READONLY,
+            \Google_Service_Drive::DRIVE_FILE,
+            'https://www.googleapis.com/auth/userinfo.email',
+        ]);
         return $client;
     }
 
