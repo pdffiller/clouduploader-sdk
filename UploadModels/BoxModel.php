@@ -11,6 +11,13 @@ class BoxModel implements \Interfaces\UploadServiceInterface {
         return $url;
     }
 
+    public static function profile($accessToken, $config)
+    {
+        $box = self::getBox($config);
+        $box->access_token = $accessToken;
+        return $box->get_user();
+    }
+
     public static function uploadFile($access_token, $uploadFile, $fileName, $config) {
         $box = self::getBox($config);
         $box->access_token = $access_token;
