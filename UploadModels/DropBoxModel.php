@@ -56,6 +56,16 @@ class DropBoxModel implements UploadServiceInterface
         $this->accessToken = $accessToken;
     }
 
+    public static function profile($accessToken, $config)
+    {
+        return self::create($config, $accessToken)->getProfile();
+    }
+
+    private function getProfile()
+    {
+        return $this->service->getCurrentAccount();
+    }
+
     private function init(array $serviceConfig = []) {
         $this->app = new DropboxApp($this->clientId, $this->clientSecret, $this->accessToken);
         $this->service = new Dropbox($this->app, $serviceConfig);
