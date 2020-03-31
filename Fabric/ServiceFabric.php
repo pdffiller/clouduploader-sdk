@@ -32,7 +32,7 @@ class ServiceFabric
         }
     }
 
-    public static function getProfile($type, $accessToken, $config)
+    public static function getEmail($type, $accessToken, $config)
     {
         if (!isset($accessToken)) {
             return array('status' => 'error', 'msg' => 'deniedByUser');
@@ -40,7 +40,13 @@ class ServiceFabric
 
         switch ($type) {
             case self::GOOGLEDRIVE:
-                $result = \UploadModels\GoogleDriveModel::profile($accessToken, $config);
+                $result = \UploadModels\GoogleDriveModel::getEmail($accessToken, $config);
+                break;
+            case self::ONEDRIVE:
+                $result =\UploadModels\OneDriveModel::getEmail($accessToken, $config);
+                break;
+            case self::BOX:
+                $result =\UploadModels\BoxModel::getEmail($accessToken, $config);
                 break;
             default:
                 throw new \RuntimeException('Cannot fetch profile.');

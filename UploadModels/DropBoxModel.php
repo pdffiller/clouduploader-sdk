@@ -56,7 +56,7 @@ class DropBoxModel implements UploadServiceInterface
         $this->accessToken = $accessToken;
     }
 
-    public static function profile($accessToken, $config)
+    public static function getEmail($accessToken, $config)
     {
         return self::create($config, $accessToken)->getProfile();
     }

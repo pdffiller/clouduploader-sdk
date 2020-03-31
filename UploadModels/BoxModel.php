@@ -11,7 +11,7 @@ class BoxModel implements \Interfaces\UploadServiceInterface {
         return $url;
     }
 
-    public static function profile($accessToken, $config)
+    public static function getEmail($accessToken, $config)
     {
         $box = self::getBox($config);
         $box->access_token = $accessToken;

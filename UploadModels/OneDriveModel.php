@@ -16,6 +16,12 @@ class OneDriveModel implements \Interfaces\UploadServiceInterface {
         return $url.'&state='.$state;
     }
 
+    public static function getEmail($token, $config)
+    {
+        $client = self::getOneDriveClient($config);
+        return $client->fetchAccountInfo()->name;
+    }
+
     public static function uploadFile($access_token, $uploadFile, $fileName, $config) {
         $data = json_decode($access_token);
         $userId = \HttpReceiver\HttpReceiver::get('userId', 'string');

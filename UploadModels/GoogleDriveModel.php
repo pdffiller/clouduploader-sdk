@@ -11,12 +11,12 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         return filter_var($auth_url, FILTER_SANITIZE_URL);
     }
 
-    public static function profile($accessToken, $config)
+    public static function getEmail($accessToken, $config)
     {
         $client = self::getGoogleClient($config);
         $client->setAccessToken($accessToken);
         $service = new \Google_Service_Oauth2($client);
-        return $service->userinfo->get();
+        return $service->userinfo->get()->getEmail();
     }
 
     public static function uploadFile($access_token, $uploadFile, $fileName, $config) {
