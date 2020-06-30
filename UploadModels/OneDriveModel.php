@@ -1,7 +1,10 @@
 <?php
 namespace UploadModels;
 
+use GuzzleHttp\Client as GuzzleHttpClient;
 use Krizalys\Onedrive\Client;
+use Microsoft\Graph\Graph;
+use Psr\Log\NullLogger;
 
 class OneDriveModel implements \Interfaces\UploadServiceInterface {
 
@@ -12,7 +15,7 @@ class OneDriveModel implements \Interfaces\UploadServiceInterface {
             'wl.basic',
             'wl.contacts_skydrive',
             'wl.skydrive_update'
-        ), $config['ONEDRIVE_CALLBACK_URI'], array('state' => $state));
+        ), $config['ONEDRIVE_CALLBACK_URI']);
         return $url.'&state='.$state;
     }
 
@@ -70,17 +73,19 @@ class OneDriveModel implements \Interfaces\UploadServiceInterface {
 
     private static function getOneDriveClient($config, $state = false) {
 
-        if(!$state) {
-            return new Client(array(
-                'client_id' => $config['ONEDRIVE_CLIENT_ID']
-            ));
-        }else{
-
-            return new Client(array(
-                'client_id' => $config['ONEDRIVE_CLIENT_ID'],
-                'state'     => $state['onedrive.client.state']
-            ));
+        $options = [];
+        if ($state) {
+            $options['state'] = $state['onedrive.client.state'];
         }
+        return new Client(
+            $config['ONEDRIVE_CLIENT_ID'],
+            new Graph(),
+            new GuzzleHttpClient([
+                'base_uri' => 'https://graph.microsoft.com/v1.0/',
+            ]),
+            new NullLogger(),
+            $options
+        );
     }
 
     private static function getFolder($access_token, $config) {
