@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "394a03dc79487d711cebdb5b126b4a3f",
+    "content-hash": "d14043fe996d507b5da4903eefeab75d",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -54,12 +54,12 @@
             "version": "v2.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/google/google-api-php-client.git",
+                "url": "https://github.com/googleapis/google-api-php-client.git",
                 "reference": "37adb8a6f4d4b27b9900d62d67bf1d54995a755c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/37adb8a6f4d4b27b9900d62d67bf1d54995a755c",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client/zipball/37adb8a6f4d4b27b9900d62d67bf1d54995a755c",
                 "reference": "37adb8a6f4d4b27b9900d62d67bf1d54995a755c",
                 "shasum": ""
             },
@@ -116,12 +116,12 @@
             "version": "v0.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/google/google-api-php-client-services.git",
+                "url": "https://github.com/googleapis/google-api-php-client-services.git",
                 "reference": "c07a8a9d424024f1a9fc5d62da8ed5467ed25909"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/c07a8a9d424024f1a9fc5d62da8ed5467ed25909",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/c07a8a9d424024f1a9fc5d62da8ed5467ed25909",
                 "reference": "c07a8a9d424024f1a9fc5d62da8ed5467ed25909",
                 "shasum": ""
             },
@@ -150,12 +150,12 @@
             "version": "v0.10",
             "source": {
                 "type": "git",
-                "url": "https://github.com/google/google-auth-library-php.git",
+                "url": "https://github.com/googleapis/google-auth-library-php.git",
                 "reference": "760e3fbe4064c0525c22e27e5374eada3c103da8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/760e3fbe4064c0525c22e27e5374eada3c103da8",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/760e3fbe4064c0525c22e27e5374eada3c103da8",
                 "reference": "760e3fbe4064c0525c22e27e5374eada3c103da8",
                 "shasum": ""
             },
@@ -373,24 +373,25 @@
         },
         {
             "name": "krizalys/onedrive-php-sdk",
-            "version": "1.0.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krizalys/onedrive-php-sdk.git",
-                "reference": "0e8fb2cd188c91beff1df1f1386ef53eecc409a3"
+                "reference": "60bf1af7cc93ef484b443d91882de904407a91a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krizalys/onedrive-php-sdk/zipball/0e8fb2cd188c91beff1df1f1386ef53eecc409a3",
-                "reference": "0e8fb2cd188c91beff1df1f1386ef53eecc409a3",
+                "url": "https://api.github.com/repos/krizalys/onedrive-php-sdk/zipball/60bf1af7cc93ef484b443d91882de904407a91a3",
+                "reference": "60bf1af7cc93ef484b443d91882de904407a91a3",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "php": ">= 5.3"
+                "php": ">= 5.4 || >= 7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.6.4"
+                "mockery/mockery": "0.9.x-dev#418b58f5884197bc7fd437f5c5358625813d9aa0",
+                "phpunit/phpunit": "4.8.26 || 5.4.4"
             },
             "type": "library",
             "autoload": {
@@ -406,11 +407,11 @@
             "homepage": "https://github.com/krizalys/onedrive-php-sdk",
             "keywords": [
                 "OneDrive",
-                "krizays",
+                "krizalys",
                 "php",
                 "sdk"
             ],
-            "time": "2015-11-22T09:58:28+00:00"
+            "time": "2017-12-09T08:20:51+00:00"
         },
         {
             "name": "kunalvarma05/dropbox-php-sdk",
@@ -868,5 +869,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
