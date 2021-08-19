@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d14043fe996d507b5da4903eefeab75d",
+    "content-hash": "dcb6ce8f56326392abdd476188f083f0",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -819,12 +819,12 @@
             "version": "v5.5.13",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tightenco/collect.git",
+                "url": "https://github.com/tighten/collect.git",
                 "reference": "dae85b18c6a2315645bca3dac37e3e408542efa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/dae85b18c6a2315645bca3dac37e3e408542efa8",
+                "url": "https://api.github.com/repos/tighten/collect/zipball/dae85b18c6a2315645bca3dac37e3e408542efa8",
                 "reference": "dae85b18c6a2315645bca3dac37e3e408542efa8",
                 "shasum": ""
             },
