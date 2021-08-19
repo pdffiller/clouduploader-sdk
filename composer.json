@@ -23,9 +23,9 @@
   ],
   "minimum-stability": "stable",
     "require": {
-        "krizalys/onedrive-php-sdk": "1.2.0",
-        "pdffiller/boxphpapi": "^1.0",
-        "google/apiclient": "^2.0",
-        "kunalvarma05/dropbox-php-sdk": "^0.2.1"
+      "google/apiclient": "2.1.*",
+      "krizalys/onedrive-php-sdk": "1.2.0",
+      "kunalvarma05/dropbox-php-sdk": "^0.2.1",
+      "pdffiller/boxphpapi": "^1.0"
     }
 }
