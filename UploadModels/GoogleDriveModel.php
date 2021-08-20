@@ -26,7 +26,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
             return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
         }
 
-        $service = new \Google_Service_Drive($client);
+        $service = new \Google\Service\Drive($client);
 
         $folderInfo = self::getFolder($access_token, $config);
         $id = 0;
@@ -46,7 +46,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         }
 
         //Insert a file
-        $file = new \Google_Service_Drive_DriveFile(array(
+        $file = new \Google\Service\Drive\DriveFile(array(
             'name' => $fileName,
             'parents' => array($id)
         ));
@@ -81,7 +81,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
     }
 
     private static function getGoogleClient($config) {
-        $client = new \Google_Client();
+        $client = new \Google\Client();
 
         $config = self::getGoogleConfig($config);
 
@@ -94,14 +94,14 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         }
 
         $client->setRedirectUri($config['GOOGLEDRIVE_REDIRECT2']);
-        $client->addScope(\Google_Service_Drive::DRIVE);
+        $client->addScope(\Google\Service\Drive::DRIVE);
         return $client;
     }
 
     private static function getFolder($access_token, $config) {
         $client = self::getGoogleClient($config);
         $client->setAccessToken($access_token);
-        $service = new \Google_Service_Drive($client);
+        $service = new \Google\Service\Drive($client);
 
         $parameters['q'] = "mimeType='application/vnd.google-apps.folder' and 'root' in parents and trashed=false";
         try {
@@ -116,7 +116,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
             }
         }
 
-        $fileMetadata = new \Google_Service_Drive_DriveFile(array(
+        $fileMetadata = new \Google\Service\Drive\DriveFile(array(
             'name' => $config['SAVE_FOLDER'],
             'mimeType' => 'application/vnd.google-apps.folder'));
         $file = $service->files->create($fileMetadata, array(
