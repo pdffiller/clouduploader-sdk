@@ -2,20 +2,26 @@
 namespace UploadModels;
 
 use Krizalys\Onedrive\Client;
+use Krizalys\Onedrive\Onedrive;
 
 class OneDriveModel implements \Interfaces\UploadServiceInterface {
 
     public static function auth($state, $config) {
         $client = self::getOneDriveClient($config);
         $url = $client->getLogInUrl(array(
-            'wl.signin',
-            'wl.basic',
-            'wl.contacts_skydrive',
-            'wl.skydrive_update'
+            'files.read',
+            'files.read.all',
+            'files.readwrite',
+            'files.readwrite.all',
+            'offline_access',
         ), $config['ONEDRIVE_CALLBACK_URI'], array('state' => $state));
         return $url.'&state='.$state;
     }
 
+    /**
+     * @throws \Krizalys\Onedrive\Exception\ConflictException
+     * @throws \Exception
+     */
     public static function uploadFile($access_token, $uploadFile, $fileName, $config) {
         $data = json_decode($access_token);
         $userId = \HttpReceiver\HttpReceiver::get('userId', 'string');
@@ -41,9 +47,9 @@ class OneDriveModel implements \Interfaces\UploadServiceInterface {
         $driveData->token = $data;
         $array['onedrive.client.state'] = $driveData;
         $client = self::getOneDriveClient($config, $array);
-        $parent      = $client->fetchObject($folderId);
+        $parent = $client->getDriveItemById($folderId['id']);
         try {
-            $parent->createFile($fileName, file_get_contents($uploadFile));
+            $parent->upload($fileName, file_get_contents($uploadFile));
         }catch(\Exception $e){
             return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
         }
@@ -68,48 +74,41 @@ class OneDriveModel implements \Interfaces\UploadServiceInterface {
         return $access_token;
     }
 
-    private static function getOneDriveClient($config, $state = false) {
-
-        if(!$state) {
-            return new Client(array(
-                'client_id' => $config['ONEDRIVE_CLIENT_ID']
-            ));
-        }else{
-
-            return new Client(array(
-                'client_id' => $config['ONEDRIVE_CLIENT_ID'],
-                'state'     => $state['onedrive.client.state']
-            ));
+    private static function getOneDriveClient($config, $state = false): Client
+    {
+        $options = [];
+        if ($state) {
+            $options['state'] = $state['onedrive.client.state'];
         }
+        return Onedrive::client($config['ONEDRIVE_CLIENT_ID'], $options);
     }
 
-    private static function getFolder($access_token, $config) {
+    /**
+     * @throws \Krizalys\Onedrive\Exception\ConflictException
+     * @throws \Exception
+     */
+    private static function getFolder($access_token, $config): array
+    {
         $data = json_decode($access_token);
         $driveData = new \stdClass();
         $driveData->redirect_uri = $config['ONEDRIVE_CALLBACK_URI'];
         $driveData->token = $data;
         $array['onedrive.client.state'] = $driveData;
         $client = self::getOneDriveClient($config, $array);
-        $parentId    = null;
         $name        = $config['SAVE_FOLDER'];
-        $description = 'Test description';
-        $parent      = $client->fetchObject($parentId);
-        try {
-            $folder = $parent->createFolder($name, $description);
-            return self::getFolder($access_token, $config);
-        }catch (\Exception $e){
-            //Folder exists
-            $objs = $parent->fetchObjects(null);
 
-            foreach($objs as $obj){
-                if($obj->getName() === $config['SAVE_FOLDER']){
-                    return $obj->getId();
-                }
+        try {
+            $folder = $client->getDriveItemByPath("/{$name}");
+        } catch (\Exception $e) {
+            if ($e->getCode() === 404) {
+                $root = $client->getRoot();
+                $folder = $root->createFolder($name, ['description' => 'Test description']);
+            } else {
+                throw $e;
             }
-            return null;
         }
 
-        return array('status' => 'ok', 'id' => $folder->getId());
+        return ['status' => 'ok', 'id' => $folder->id];
     }
 
     public static function getOneDriveConfig($config){
