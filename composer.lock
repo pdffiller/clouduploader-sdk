@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "722c50f17b31420678187f412723f171",
+    "content-hash": "e529e30a935c29b21d2e7e03107c2b72",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -509,20 +509,20 @@
         },
         {
             "name": "krizalys/onedrive-php-sdk",
-            "version": "3.0.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krizalys/onedrive-php-sdk.git",
-                "reference": "3e128aeddd494e2f332197a0a1a39c9b88c262ce"
+                "reference": "a300e86c855aefc35d5ef37ce8a69a8b61ccedea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krizalys/onedrive-php-sdk/zipball/3e128aeddd494e2f332197a0a1a39c9b88c262ce",
-                "reference": "3e128aeddd494e2f332197a0a1a39c9b88c262ce",
+                "url": "https://api.github.com/repos/krizalys/onedrive-php-sdk/zipball/a300e86c855aefc35d5ef37ce8a69a8b61ccedea",
+                "reference": "a300e86c855aefc35d5ef37ce8a69a8b61ccedea",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "^6.3.3",
+                "guzzlehttp/guzzle": ">=6.3.3",
                 "microsoft/microsoft-graph": "^1.7.0",
                 "php": ">=7.3"
             },
@@ -562,7 +562,7 @@
                 "source": "https://github.com/krizalys/onedrive-php-sdk",
                 "wiki": "https://github.com/krizalys/onedrive-php-sdk/wiki"
             },
-            "time": "2021-02-12T12:55:32+00:00"
+            "time": "2021-04-18T05:53:24+00:00"
         },
         {
             "name": "kunalvarma05/dropbox-php-sdk",
