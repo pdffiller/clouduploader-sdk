@@ -1,7 +1,7 @@
 {
   "name": "pdffiller/clouduploader-sdk",
   "type": "library",
-  "description": "Cloud uploader library for GoogleDrive, OneDrive, DropBox, Box",
+  "description": "Cloud uploader library for GoogleDrive, DropBox, Box",
     "autoload": {
         "psr-4": {
             "HttpReceiver\\": "HttpReceiver/",
@@ -23,7 +23,6 @@
   ],
   "minimum-stability": "stable",
     "require": {
-      "krizalys/onedrive-php-sdk": "1.2.0",
       "pdffiller/boxphpapi": "^1.0",
       "google/apiclient": "^v2.2",
       "kunalvarma05/dropbox-php-sdk": "^0.2.1"
