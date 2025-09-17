@@ -7,7 +7,6 @@ class ServiceFabric{
     const DROPBOX = 0;
     const GOOGLEDRIVE = 1;
     const BOX = 2;
-    const ONEDRIVE = 3;
 
     public static function auth($type, $code, $config) {
 
@@ -22,9 +21,6 @@ class ServiceFabric{
                 case self::BOX:
                     $data = \HttpReceiver\HttpReceiver::get('userId','int');
                     return \UploadModels\BoxModel::auth($data,$config);
-                case self::ONEDRIVE:
-                    $data = \HttpReceiver\HttpReceiver::get('userId','int');
-                    return \UploadModels\OneDriveModel::auth($data,$config);
             }
         }elseif($code == 'access_token'){
             $result = self::getToken($type, $config);
@@ -73,16 +69,6 @@ class ServiceFabric{
                     $result = array('status' => 'error', 'msg' => 'Cloud Error');
                 }
                 break;
-            case self::ONEDRIVE:
-                if(!isset($access_token)) {
-                    return array('status' => 'error', 'msg' => 'deniedByUser');
-                }
-                try {
-                    $result = \UploadModels\OneDriveModel::uploadFile($access_token, $uploadFile, $fileName, $config);
-                } catch(\Exception $e){
-                    $result = array('status' => 'error', 'msg' => 'Cloud Error');
-                }
-                break;
         }
         return $result;
     }
@@ -99,9 +85,6 @@ class ServiceFabric{
                 break;
             case self::BOX:
                 $result = \UploadModels\BoxModel::getToken($config);
-                break;
-            case self::ONEDRIVE:
-                $result = \UploadModels\OneDriveModel::getToken($config);
                 break;
         }
         return $result;
