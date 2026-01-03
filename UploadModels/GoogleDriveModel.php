@@ -80,6 +80,24 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
 
     }
 
+    public static function getUsername($access_token, $config) {
+        if (!isset($access_token)) {
+            return array('status' => 'error', 'msg' => 'deniedByUser');
+        }
+
+        try {
+            $client = self::getGoogleClient($config);
+            $client->setAccessToken($access_token);
+            
+            $service = new \Google\Service\Drive($client);
+            $emailAddress = $service->about->get(['fields' => ['user']])['user']['emailAddress'];
+            
+            return array('status' => 'ok', 'username' => $emailAddress);
+        } catch(\Exception $e){
+            return array('status' => 'error', 'msg' => 'Cloud Error', 'details' => $e->getMessage());
+        }
+    }
+
     private static function getGoogleClient($config) {
         $client = new \Google\Client();
 

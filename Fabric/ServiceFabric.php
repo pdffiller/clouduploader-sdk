@@ -89,4 +89,20 @@ class ServiceFabric{
         }
         return $result;
     }
+
+    public static function getUsername($type, $access_token, $config) {
+        
+        $result = array('status' => 'error', 'msg' => 'Wrong service type');
+
+        if(!isset($type)) {
+            return $result;
+        }
+
+        switch($type){
+            case self::GOOGLEDRIVE:
+                return \UploadModels\GoogleDriveModel::getUsername($access_token, $config);
+            default:
+                return $result;
+        }
+    }
 }
