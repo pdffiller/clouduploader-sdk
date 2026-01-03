@@ -64,7 +64,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         }
 
         if (isset($createdFile) && isset($createdFile['id']) && strlen($createdFile['id']) > 0) {
-            return array('status' => 'ok');
+            return array('status' => 'ok', 'file_id' => $createdFile['id']);
         } else {
             return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
         }

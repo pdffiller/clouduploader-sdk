@@ -118,8 +118,9 @@ class DropBoxModel implements UploadServiceInterface
         $remotePath = "/" . $config['SAVE_FOLDER'] . "/" . $remoteFilename;
 
         try {
-            self::create($config, $access_token)->upload($uploadFile, $remotePath);
-            return ['status' => 'ok'];
+            $fileMetadata = self::create($config, $access_token)->upload($uploadFile, $remotePath);
+            $fileId = $fileMetadata->getId();
+            return ['status' => 'ok', 'file_id' => $fileId];
         } catch (Exception $e) {
             return [
                 'status' => 'error',
@@ -151,11 +152,12 @@ class DropBoxModel implements UploadServiceInterface
     /**
      * @param string $localFilename
      * @param string $remoteFilename
+     * @return mixed
      */
 
     private function upload($localFilename, $remoteFilename)
     {
-        $this->service->upload($localFilename, $remoteFilename, ['autorename' => true]);
+        return $this->service->upload($localFilename, $remoteFilename, ['autorename' => true]);
     }
 
     /**

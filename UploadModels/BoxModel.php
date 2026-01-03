@@ -37,7 +37,8 @@ class BoxModel implements \Interfaces\UploadServiceInterface {
             }
 
             if(is_array($answer->entries) && sizeof($answer->entries) > 0){
-                return array('status' => 'ok');
+                $fileId = $answer->entries[0]->id;
+                return array('status' => 'ok', 'file_id' => $fileId);
             }else{
                 return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
             }
