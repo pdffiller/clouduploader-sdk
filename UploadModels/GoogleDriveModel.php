@@ -87,6 +87,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
 
         try {
             $client = self::getGoogleClient($config);
+            $access_token = (array)$access_token;
             $client->setAccessToken($access_token);
             
             $service = new \Google\Service\Drive($client);
