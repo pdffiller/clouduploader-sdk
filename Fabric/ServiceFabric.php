@@ -99,6 +99,8 @@ class ServiceFabric{
         }
 
         switch($type){
+            case self::DROPBOX:
+                return \UploadModels\DropBoxModel::getUsername($access_token, $config);
             case self::GOOGLEDRIVE:
                 return \UploadModels\GoogleDriveModel::getUsername($access_token, $config);
             default:

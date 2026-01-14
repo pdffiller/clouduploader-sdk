@@ -174,6 +174,35 @@ class DropBoxModel implements UploadServiceInterface
     }
 
     /**
+     * @param string $access_token
+     * @param array $config
+     * @return array
+     */
+    public static function getUsername($access_token, $config)
+    {
+        if (!isset($access_token)) {
+            return ['status' => 'error', 'msg' => 'deniedByUser'];
+        }
+
+        try {
+            $account = self::create($config, $access_token)->getCurrentAccount();
+            $emailAddress = $account->getEmail();
+            
+            return ['status' => 'ok', 'username' => $emailAddress];
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => 'Cloud Error', 'details' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getCurrentAccount()
+    {
+        return $this->service->getCurrentAccount();
+    }
+
+    /**
      * @param string $localPath
      * @return string
      */
