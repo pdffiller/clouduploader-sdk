@@ -6,5 +6,6 @@ interface UploadServiceInterface{
     public static function auth($state,$config);
     public static function uploadFile($access_token, $uploadFile, $fileName, $config);
     public static function getToken($config);
+    public static function updateFile($access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config);
 
 }

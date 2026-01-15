@@ -99,6 +99,66 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         }
     }
 
+    public static function updateFile($access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config) {
+        if (!isset($access_token)) {
+            return array('status' => 'error', 'msg' => 'deniedByUser');
+        }
+
+        $userId = \HttpReceiver\HttpReceiver::get('userId', 'string');
+        $client = self::getGoogleClient($config);
+        try {
+            $access_token = (array)$access_token;
+            $client->setAccessToken($access_token);
+        } catch (\InvalidArgumentException $e) {
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        }
+
+        $service = new \Google\Service\Drive($client);
+
+        // Try to update existing file
+        try {
+            $extension = self::getExtension($fileUrl);
+            $fileName = $fileNameWithoutExtension;
+            if (!isset($fileName) || strlen($fileName) == 0 || $fileName == '0') {
+                $tmp = explode('/', $fileUrl);
+                $fileName = $tmp[sizeof($tmp) - 1];
+                $temp = explode('.', $fileName);
+                if (is_array($temp)) {
+                    $fileName = $temp[0];
+                }
+            }
+            $fileName .= '.' . $extension;
+
+            $file = new \Google\Service\Drive\DriveFile(array(
+                'name' => $fileName
+            ));
+
+            $data = file_get_contents($fileUrl);
+
+            $updatedFile = $service->files->update($fileId, $file, array(
+                'data' => $data,
+                'mimeType' => self::getMime($extension),
+                'uploadType' => 'multipart',
+                'fields' => 'id'
+            ));
+
+            if (isset($updatedFile) && isset($updatedFile['id']) && strlen($updatedFile['id']) > 0) {
+                return array('file_id' => $updatedFile['id']);
+            } else {
+                return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+            }
+        } catch (\Google\Service\Exception $e) {
+            // If file not found (404), fall back to uploading as new file
+            if ($e->getCode() == 404) {
+                return self::uploadFile($access_token, $fileUrl, $fileNameWithoutExtension, $config);
+            }
+            // Other errors - token refresh needed
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        } catch (\Exception $e) {
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        }
+    }
+
     private static function getGoogleClient($config) {
         $client = new \Google\Client();
 

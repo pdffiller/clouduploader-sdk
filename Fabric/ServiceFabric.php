@@ -107,4 +107,27 @@ class ServiceFabric{
                 return $result;
         }
     }
+
+    public static function updateFile($type, $access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config) {
+
+        $result = array('status' => 'error', 'msg' => 'Wrong service type');
+
+        if(!isset($type)) {
+            return $result;
+        }
+
+        switch($type){
+            case self::GOOGLEDRIVE:
+                if(!isset($access_token)) {
+                    return array('status' => 'error', 'msg' => 'deniedByUser');
+                }
+                try {
+                    $result = \UploadModels\GoogleDriveModel::updateFile($access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config);
+                } catch(\Exception $e) {
+                    $result = array('status' => 'error', 'msg' => 'Cloud Error ' . $e->getMessage());
+                }
+                break;
+        }
+        return $result;
+    }
 }
