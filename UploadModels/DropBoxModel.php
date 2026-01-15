@@ -90,6 +90,11 @@ class DropBoxModel implements UploadServiceInterface
         }
     }
 
+    public static function updateFile($access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config)
+    {
+        return ['status' => 'error', 'msg' => 'Not implemented'];
+    }
+
     /**
      * @param string $access_token
      * @param string $uploadFile

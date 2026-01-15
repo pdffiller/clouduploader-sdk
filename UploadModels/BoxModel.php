@@ -67,6 +67,10 @@ class BoxModel implements \Interfaces\UploadServiceInterface {
         return $data['access_token'];
     }
 
+    public static function updateFile($access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config) {
+        return array('status' => 'error', 'msg' => 'Not implemented');
+    }
+
 
     private static function getBox($config) {
 
