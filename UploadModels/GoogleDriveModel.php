@@ -159,6 +159,48 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         }
     }
 
+    public static function getFileMetadata($access_token, $fileId, $config) {
+        if (!isset($access_token)) {
+            return array('status' => 'error', 'msg' => 'deniedByUser');
+        }
+
+        $userId = \HttpReceiver\HttpReceiver::get('userId', 'string');
+        $client = self::getGoogleClient($config);
+        try {
+            $access_token = (array)$access_token;
+            $client->setAccessToken($access_token);
+        } catch (\InvalidArgumentException $e) {
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        }
+
+        $service = new \Google\Service\Drive($client);
+
+        try {
+            $file = $service->files->get($fileId, array(
+                'fields' => 'id,name,mimeType,size,createdTime,modifiedTime,webViewLink,webContentLink'
+            ));
+
+            return array(
+                'status' => 'ok',
+                'file_id' => $file->getId(),
+                'name' => $file->getName(),
+                'mimeType' => $file->getMimeType(),
+                'size' => $file->getSize(),
+                'createdTime' => $file->getCreatedTime(),
+                'modifiedTime' => $file->getModifiedTime(),
+                'webViewLink' => $file->getWebViewLink(),
+                'webContentLink' => $file->getWebContentLink()
+            );
+        } catch (\Google\Service\Exception $e) {
+            if ($e->getCode() == 404) {
+                return array('status' => 'error', 'msg' => 'File not found');
+            }
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        } catch (\Exception $e) {
+            return array('status' => 'error', 'msg' => 'Cloud Error', 'details' => $e->getMessage());
+        }
+    }
+
     private static function getGoogleClient($config) {
         $client = new \Google\Client();
 
