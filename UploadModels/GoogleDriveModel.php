@@ -177,8 +177,11 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
 
         try {
             $file = $service->files->get($fileId, array(
-                'fields' => 'id,name,mimeType,size,createdTime,modifiedTime,webViewLink,webContentLink'
+                'fields' => 'id,name,mimeType,size,createdTime,modifiedTime,webViewLink,webContentLink,parents'
             ));
+
+            $parents = $file->getParents();
+            $folderId = !empty($parents) ? $parents[0] : null;
 
             return array(
                 'status' => 'ok',
@@ -189,7 +192,8 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
                 'createdTime' => $file->getCreatedTime(),
                 'modifiedTime' => $file->getModifiedTime(),
                 'webViewLink' => $file->getWebViewLink(),
-                'webContentLink' => $file->getWebContentLink()
+                'webContentLink' => $file->getWebContentLink(),
+                'folder_id' => $folderId
             );
         } catch (\Google\Service\Exception $e) {
             if ($e->getCode() == 404) {
