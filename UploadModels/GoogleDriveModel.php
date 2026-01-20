@@ -85,6 +85,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
             return array('status' => 'error', 'msg' => 'deniedByUser');
         }
 
+        $userId = \HttpReceiver\HttpReceiver::get('userId', 'string');
         try {
             $client = self::getGoogleClient($config);
             $access_token = (array)$access_token;
@@ -99,6 +100,11 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
             }
             
             return array('status' => 'ok', 'username' => $emailAddress);
+        } catch (\Google\Service\Exception $e) {
+            if (in_array($e->getCode(), array(401, 403), true)) {
+                return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+            }
+            return array('status' => 'error', 'msg' => 'Cloud Error', 'details' => $e->getMessage());
         } catch(\Exception $e){
             return array('status' => 'error', 'msg' => 'Cloud Error', 'details' => $e->getMessage());
         }
