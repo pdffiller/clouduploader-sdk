@@ -91,7 +91,8 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
             $client->setAccessToken($access_token);
             
             $service = new \Google\Service\Drive($client);
-            $emailAddress = $service->about->get(['fields' => ['user']])['user']['emailAddress'];
+            $about = $service->about->get(['fields' => 'user(emailAddress)']);
+            $emailAddress = $about->getUser() ? $about->getUser()->getEmailAddress() : null;
             
             return array('status' => 'ok', 'username' => $emailAddress);
         } catch(\Exception $e){
@@ -135,6 +136,10 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
 
             $data = file_get_contents($fileUrl);
 
+            if ($data === false) {
+                return array('status' => 'error', 'msg' => 'fileNotExist');
+            }
+
             $updatedFile = $service->files->update($fileId, $file, array(
                 'data' => $data,
                 'mimeType' => self::getMime($extension),
@@ -143,7 +148,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
             ));
 
             if (isset($updatedFile) && isset($updatedFile['id']) && strlen($updatedFile['id']) > 0) {
-                return array('file_id' => $updatedFile['id']);
+                return array('status' => 'ok', 'file_id' => $updatedFile['id']);
             } else {
                 return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
             }
