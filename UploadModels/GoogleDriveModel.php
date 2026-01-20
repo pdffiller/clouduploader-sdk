@@ -93,6 +93,10 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
             $service = new \Google\Service\Drive($client);
             $about = $service->about->get(['fields' => 'user(emailAddress)']);
             $emailAddress = $about->getUser() ? $about->getUser()->getEmailAddress() : null;
+
+            if ($emailAddress === null) {
+                return array('status' => 'error', 'msg' => 'Cloud Error', 'details' => 'Unable to retrieve email address');
+            }
             
             return array('status' => 'ok', 'username' => $emailAddress);
         } catch(\Exception $e){
