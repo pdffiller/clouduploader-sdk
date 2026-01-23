@@ -90,6 +90,11 @@ class DropBoxModel implements UploadServiceInterface
         }
     }
 
+    public static function updateFile($access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config)
+    {
+        return ['status' => 'error', 'msg' => 'Not implemented'];
+    }
+
     /**
      * @param string $access_token
      * @param string $uploadFile
@@ -118,8 +123,9 @@ class DropBoxModel implements UploadServiceInterface
         $remotePath = "/" . $config['SAVE_FOLDER'] . "/" . $remoteFilename;
 
         try {
-            self::create($config, $access_token)->upload($uploadFile, $remotePath);
-            return ['status' => 'ok'];
+            $fileMetadata = self::create($config, $access_token)->upload($uploadFile, $remotePath);
+            $fileId = $fileMetadata->getId();
+            return ['status' => 'ok', 'file_id' => $fileId];
         } catch (Exception $e) {
             return [
                 'status' => 'error',
@@ -151,11 +157,12 @@ class DropBoxModel implements UploadServiceInterface
     /**
      * @param string $localFilename
      * @param string $remoteFilename
+     * @return mixed
      */
 
     private function upload($localFilename, $remoteFilename)
     {
-        $this->service->upload($localFilename, $remoteFilename, ['autorename' => true]);
+        return $this->service->upload($localFilename, $remoteFilename, ['autorename' => true]);
     }
 
     /**
@@ -169,6 +176,35 @@ class DropBoxModel implements UploadServiceInterface
             $ext = reset(explode('&', $ext));
         }
         return $ext;
+    }
+
+    /**
+     * @param string $access_token
+     * @param array $config
+     * @return array
+     */
+    public static function getUsername($access_token, $config)
+    {
+        if (!isset($access_token)) {
+            return ['status' => 'error', 'msg' => 'deniedByUser'];
+        }
+
+        try {
+            $account = self::create($config, $access_token)->getCurrentAccount();
+            $emailAddress = $account->getEmail();
+            
+            return ['status' => 'ok', 'username' => $emailAddress];
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => 'Cloud Error', 'details' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getCurrentAccount()
+    {
+        return $this->service->getCurrentAccount();
     }
 
     /**

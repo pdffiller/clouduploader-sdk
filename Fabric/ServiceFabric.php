@@ -89,4 +89,68 @@ class ServiceFabric{
         }
         return $result;
     }
+
+    public static function getUsername($type, $access_token, $config) {
+        
+        $result = array('status' => 'error', 'msg' => 'Wrong service type');
+
+        if(!isset($type)) {
+            return $result;
+        }
+
+        switch($type){
+            case self::DROPBOX:
+                return \UploadModels\DropBoxModel::getUsername($access_token, $config);
+            case self::GOOGLEDRIVE:
+                return \UploadModels\GoogleDriveModel::getUsername($access_token, $config);
+            default:
+                return $result;
+        }
+    }
+
+    public static function updateFile($type, $access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config) {
+
+        $result = array('status' => 'error', 'msg' => 'Wrong service type');
+
+        if(!isset($type)) {
+            return $result;
+        }
+
+        switch($type){
+            case self::GOOGLEDRIVE:
+                if(!isset($access_token)) {
+                    return array('status' => 'error', 'msg' => 'deniedByUser');
+                }
+                try {
+                    $result = \UploadModels\GoogleDriveModel::updateFile($access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config);
+                } catch(\Exception $e) {
+                    $result = array('status' => 'error', 'msg' => 'Cloud Error ' . $e->getMessage());
+                }
+                break;
+        }
+        return $result;
+    }
+
+    public static function getFileMetadata($type, $access_token, $fileId, $config) {
+
+        $result = array('status' => 'error', 'msg' => 'Wrong service type');
+
+        if(!isset($type)) {
+            return $result;
+        }
+
+        switch($type){
+            case self::GOOGLEDRIVE:
+                if(!isset($access_token)) {
+                    return array('status' => 'error', 'msg' => 'deniedByUser');
+                }
+                try {
+                    $result = \UploadModels\GoogleDriveModel::getFileMetadata($access_token, $fileId, $config);
+                } catch(\Exception $e) {
+                    $result = array('status' => 'error', 'msg' => 'Cloud Error ' . $e->getMessage());
+                }
+                break;
+        }
+        return $result;
+    }
 }

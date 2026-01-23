@@ -64,7 +64,7 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         }
 
         if (isset($createdFile) && isset($createdFile['id']) && strlen($createdFile['id']) > 0) {
-            return array('status' => 'ok');
+            return array('status' => 'ok', 'file_id' => $createdFile['id']);
         } else {
             return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
         }
@@ -78,6 +78,146 @@ class GoogleDriveModel implements \Interfaces\UploadServiceInterface {
         $client->authenticate($code);
         return $client->getAccessToken();
 
+    }
+
+    public static function getUsername($access_token, $config) {
+        if (!isset($access_token)) {
+            return array('status' => 'error', 'msg' => 'deniedByUser');
+        }
+
+        $userId = \HttpReceiver\HttpReceiver::get('userId', 'string');
+        try {
+            $client = self::getGoogleClient($config);
+            $access_token = (array)$access_token;
+            $client->setAccessToken($access_token);
+            
+            $service = new \Google\Service\Drive($client);
+            $about = $service->about->get(['fields' => 'user(emailAddress)']);
+            $emailAddress = $about->getUser() ? $about->getUser()->getEmailAddress() : null;
+
+            if ($emailAddress === null) {
+                return array('status' => 'error', 'msg' => 'Cloud Error', 'details' => 'Unable to retrieve email address');
+            }
+            
+            return array('status' => 'ok', 'username' => $emailAddress);
+        } catch (\Google\Service\Exception $e) {
+            if (in_array($e->getCode(), array(401, 403), true)) {
+                return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+            }
+            return array('status' => 'error', 'msg' => 'Cloud Error', 'details' => $e->getMessage());
+        } catch(\Exception $e){
+            return array('status' => 'error', 'msg' => 'Cloud Error', 'details' => $e->getMessage());
+        }
+    }
+
+    public static function updateFile($access_token, $fileUrl, $fileNameWithoutExtension, $fileId, $config) {
+        if (!isset($access_token)) {
+            return array('status' => 'error', 'msg' => 'deniedByUser');
+        }
+
+        $userId = \HttpReceiver\HttpReceiver::get('userId', 'string');
+        $client = self::getGoogleClient($config);
+        try {
+            $access_token = (array)$access_token;
+            $client->setAccessToken($access_token);
+        } catch (\InvalidArgumentException $e) {
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        }
+
+        $service = new \Google\Service\Drive($client);
+
+        // Try to update existing file
+        try {
+            $extension = self::getExtension($fileUrl);
+            $fileName = $fileNameWithoutExtension;
+            if (!isset($fileName) || strlen($fileName) == 0 || $fileName == '0') {
+                $tmp = explode('/', $fileUrl);
+                $fileName = $tmp[sizeof($tmp) - 1];
+                $temp = explode('.', $fileName);
+                if (is_array($temp)) {
+                    $fileName = $temp[0];
+                }
+            }
+            $fileName .= '.' . $extension;
+
+            $file = new \Google\Service\Drive\DriveFile(array(
+                'name' => $fileName
+            ));
+
+            $data = file_get_contents($fileUrl);
+
+            if ($data === false) {
+                return array('status' => 'error', 'msg' => 'fileNotExist');
+            }
+
+            $updatedFile = $service->files->update($fileId, $file, array(
+                'data' => $data,
+                'mimeType' => self::getMime($extension),
+                'uploadType' => 'multipart',
+                'fields' => 'id'
+            ));
+
+            if (isset($updatedFile) && isset($updatedFile['id']) && strlen($updatedFile['id']) > 0) {
+                return array('status' => 'ok', 'file_id' => $updatedFile['id']);
+            } else {
+                return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+            }
+        } catch (\Google\Service\Exception $e) {
+            // If file not found (404), fall back to uploading as new file
+            if ($e->getCode() == 404) {
+                return self::uploadFile($access_token, $fileUrl, $fileNameWithoutExtension, $config);
+            }
+            // Other errors - token refresh needed
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        } catch (\Exception $e) {
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        }
+    }
+
+    public static function getFileMetadata($access_token, $fileId, $config) {
+        if (!isset($access_token)) {
+            return array('status' => 'error', 'msg' => 'deniedByUser');
+        }
+
+        $userId = \HttpReceiver\HttpReceiver::get('userId', 'string');
+        $client = self::getGoogleClient($config);
+        try {
+            $access_token = (array)$access_token;
+            $client->setAccessToken($access_token);
+        } catch (\InvalidArgumentException $e) {
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        }
+
+        $service = new \Google\Service\Drive($client);
+
+        try {
+            $file = $service->files->get($fileId, array(
+                'fields' => 'id,name,mimeType,size,createdTime,modifiedTime,webViewLink,webContentLink,parents'
+            ));
+
+            $parents = $file->getParents();
+            $folderId = !empty($parents) ? $parents[0] : null;
+
+            return array(
+                'status' => 'ok',
+                'file_id' => $file->getId(),
+                'name' => $file->getName(),
+                'mimeType' => $file->getMimeType(),
+                'size' => $file->getSize(),
+                'createdTime' => $file->getCreatedTime(),
+                'modifiedTime' => $file->getModifiedTime(),
+                'webViewLink' => $file->getWebViewLink(),
+                'webContentLink' => $file->getWebContentLink(),
+                'folder_id' => $folderId
+            );
+        } catch (\Google\Service\Exception $e) {
+            if ($e->getCode() == 404) {
+                return array('status' => 'error', 'msg' => 'File not found');
+            }
+            return array('status' => 'error', 'msg' => 'refreshToken', 'url' => self::auth($userId, $config));
+        } catch (\Exception $e) {
+            return array('status' => 'error', 'msg' => 'Cloud Error', 'details' => $e->getMessage());
+        }
     }
 
     private static function getGoogleClient($config) {
