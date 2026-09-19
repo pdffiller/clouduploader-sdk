@@ -1,30 +1,44 @@
 {
-  "name": "pdffiller/clouduploader-sdk",
-  "type": "library",
-  "description": "Cloud uploader library for GoogleDrive, DropBox, Box",
+    "name": "pdffiller/clouduploader-sdk",
+    "type": "library",
+    "description": "Cloud uploader library for GoogleDrive, DropBox, Box",
     "autoload": {
         "psr-4": {
             "HttpReceiver\\": "HttpReceiver/",
             "Fabric\\": "Fabric/",
             "Interfaces\\": "Interfaces/",
             "UploadModels\\": "UploadModels/",
-            "Apibox\\":"vendor/pdffiller/boxphpapi/src"
+            "Apibox\\": "vendor/pdffiller/boxphpapi/src"
         }
     },
     "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/pdffiller/Box-SDK.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/google/google-api-php-client.git"
-    }
-  ],
-  "minimum-stability": "stable",
+        {
+            "type": "vcs",
+            "url": "https://github.com/pdffiller/Box-SDK.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/google/google-api-php-client.git"
+        }
+    ],
+    "minimum-stability": "stable",
     "require": {
-      "pdffiller/boxphpapi": "^1.0",
-      "google/apiclient": "^v2.2",
-      "kunalvarma05/dropbox-php-sdk": "^0.2.1 || ^0.5.0"
+        "php": "^8.1",
+        "pdffiller/boxphpapi": "^1.0",
+        "google/apiclient": "^2.19",
+        "kunalvarma05/dropbox-php-sdk": "^0.5.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "^5.0",
+        "codeception/module-asserts": "^3.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "codecept run",
+        "test-coverage": "codecept run --coverage --coverage-xml --coverage-html"
     }
 }
