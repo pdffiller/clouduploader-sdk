@@ -1,0 +1,90 @@
+name: Tests
+
+# Public repository: this workflow must never need a secret.
+# Every dependency resolves from Packagist or from the public pdffiller/Box-SDK
+# repository, and the test suite itself is hermetic (no network, no credentials).
+# Keep it that way - do not add `secrets: inherit` or `pull_request_target` here.
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4', '8.5']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer downloads
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-php${{ matrix.php }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-php${{ matrix.php }}-
+            ${{ runner.os }}-composer-
+
+      # `update`, not `install`: composer.lock is resolved against the lowest
+      # supported PHP, which pins dev dependencies that lag behind the newest
+      # PHP. Resolving per matrix entry is what tells us the library actually
+      # works on that version. The committed lock is verified separately by the
+      # `locked` job below.
+      - name: Install dependencies
+        run: composer update --no-interaction --no-progress --prefer-dist
+
+      - name: Run tests
+        run: ./vendor/bin/codecept run --no-artifacts
+
+  locked:
+    name: Committed composer.lock (PHP 8.1)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+          tools: composer:v2
+
+      # --strict would fail on the missing "license" field (LICENSE says MIT);
+      # add `"license": "MIT"` to composer.json and this can be tightened.
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install locked dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run tests
+        run: ./vendor/bin/codecept run --no-artifacts
